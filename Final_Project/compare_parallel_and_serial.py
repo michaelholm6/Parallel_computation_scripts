@@ -3,7 +3,7 @@ import Parallel_PCA as parallel
 import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
-    evaluation_data_points = [[100, 2101], 400, [100, 2101], 400, 8]
+    evaluation_data_points = [[100, 2101], 400, [100, 2101], 400, 4]
     serial_dimensions, serial_samples, serial_times = serial.evaluate_pca_serial_time(evaluation_data_points[0], evaluation_data_points[1], evaluation_data_points[2], evaluation_data_points[3])
     parallel_dimensions, parallel_samples, parallel_times = parallel.evaluate_pca_parallel_time(evaluation_data_points[0], evaluation_data_points[1], evaluation_data_points[2], evaluation_data_points[3], 1, evaluation_data_points[4])
     

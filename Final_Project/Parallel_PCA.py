@@ -6,10 +6,24 @@ import itertools
 import datetime
 
 def generate_data_array(data_points, dimensions):
+    """Randomly generates a data array of normally distrubted data points.
+
+    Args:
+        data_points (_type_): Number of samples in the array to generate.
+        dimensions (_type_): Number of dimensions per sample in the array to generate.
+    """
     data_array = np.random.randn(data_points, dimensions)
     np.savetxt('generated_data.csv', data_array, delimiter=',')
     
 def normalize_column(column: int):
+    """Normalizes a column of data by subtracting the mean and dividing by the standard deviation.
+
+    Args:
+        column (int): Column to normalize.
+
+    Returns:
+        _type_: Normalized column.
+    """
     global data_array
     try:
         x = data_array[0,0]
@@ -23,6 +37,15 @@ def normalize_column(column: int):
     return column
     
 def calculate_covariance(i, j):
+    """Calculates the covariance between two columns of data.
+
+    Args:
+        i (_type_): First column to calculate covariance between.
+        j (_type_): Second column to calculate covariance between.
+
+    Returns:
+        _type_: Covariance between the two columns.
+    """
     global standardized_data
     try:
         x = standardized_data[0,0]
@@ -37,6 +60,15 @@ def calculate_covariance(i, j):
         return covariance, i, j
             
 def multiply_matrices(i, j):
+    """Multiplies two matrices together.
+
+    Args:
+        i (_type_): Row to multiply.
+        j (_type_): Column to multiply.
+
+    Returns:
+        _type_: Result of the multiplication.
+    """
     global eigenvector_data
     global standardized_data
     try:
@@ -53,6 +85,16 @@ def multiply_matrices(i, j):
     return answer, i, j
 
 def parallel_PCA(out_dims, generate_processes, cpus):
+    """Performs PCA on a data array in parallel.
+
+    Args:
+        out_dims (_type_): Output dimensions.
+        generate_processes (_type_): Boolean to determine whether to generate processes.
+        cpus (_type_): Number of cpus to use.
+
+    Returns:
+        _type_: Output data array.
+    """
     start_time = time.time()
     
     data_array = np.genfromtxt('generated_data.csv', delimiter=',')
@@ -133,6 +175,15 @@ def evaluate_pca_parallel_time(n_dimension_range: tuple, n_dimension_step: int, 
     
     @np.vectorize
     def Z_function(samples, dimensions):
+        """Evaluate PCA execution time over a meshgrid of input dimensions.
+
+        Args:
+            samples (_type_): Numpy array of sample sizes to evaluate.
+            dimensions (_type_): Numpy array of dimensions to evaluate.
+
+        Returns:
+            _type_: Numpy array of dimensions, samples, and execution times.
+        """
         generate_data_array(samples, dimensions)
         print('Parallel Samples: ' + str(samples) + ' Parallel Dimensions: ' + str(dimensions) + ' Start Time: ' + str(datetime.datetime.now()))
         total_time = parallel_PCA(dimensions, generate_processes, cpus)

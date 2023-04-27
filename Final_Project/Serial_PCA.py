@@ -4,10 +4,25 @@ import matplotlib.pyplot as plt
 import datetime
 
 def generate_data_array(data_points, dimensions):
+    """Randomly generates a data array of normally distrubted data points.
+
+    Args:
+        data_points (_type_): Number of samples in the array to generate.
+        dimensions (_type_): Number of dimensions per sample in the array to generate.
+    """
     data_array = np.random.randn(data_points, dimensions)
     np.savetxt('generated_data.csv', data_array, delimiter=',')
 
 def serial_PCA(out_dims):
+    """Performs PCA on the data in generated_data.csv. 
+    Returns the transformed data and the time taken to perform the analysis.
+
+    Args:
+        out_dims (_type_): Output dimensions to use in the PCA analysis.
+
+    Returns:
+        _type_: Transformed data.
+    """
     start_time = time.time()
     data_array = np.genfromtxt('generated_data.csv', delimiter=',')
     
@@ -52,9 +67,28 @@ def serial_PCA(out_dims):
     return output, total_time
     
 def evaluate_pca_serial_time(n_dimension_range: tuple, n_dimension_step: int, n_sample_size_range: tuple, n_sample_size_step: int):
+    """Evaluates the time taken to perform PCA on a range of dimensions and sample sizes.
+
+    Args:
+        n_dimension_range (tuple): Range of dimensions to evaluate.
+        n_dimension_step (int): Step size of dimensions to evaluate.
+        n_sample_size_range (tuple): Range of sample sizes to evaluate.
+        n_sample_size_step (int): Step size of sample sizes to evaluate.
+    Returns:
+        _type_: Array of dimensions, array of sample sizes, and array of times.
+    """
     
     @np.vectorize
-    def Z_function(samples, dimensions):
+    def Z_function(samples: np.array, dimensions: np.array):
+        """Vectorized function to evaluate the time taken to perform PCA on a range of dimensions and sample sizes.
+
+        Args:
+            samples (np.array): Numpy array of samples to evaluate and time.
+            dimensions (np.array): Numpy array of dimensions to evaluate and time.
+
+        Returns:
+            _type_: Numpy array for time taken to perform PCA on the given dimensions and samples.
+        """
         generate_data_array(samples, dimensions)
         print('Serial Samples: ' + str(samples) + ' Serial Dimensions: ' + str(dimensions) + ' Start Time: ' + str(datetime.datetime.now()))
         _, total_time = serial_PCA(dimensions)
